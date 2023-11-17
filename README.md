@@ -45,7 +45,9 @@ python white-raven.py
 ```
 
 # Apporach
+White-Raven is written in python for its scripting and its ease of automation.
 
 # Limitations
+Some limitations I have run into while developing are....
 
 # Advantages
