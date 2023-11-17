@@ -1,0 +1,4 @@
+cd .\OneDrive\Documents\White_RAVEN\White_RAVEN\scripts\
+clear
+python3 .\white_raven.py
+tools fortel 192.168.1.64 250 1-1000

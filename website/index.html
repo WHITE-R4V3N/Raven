@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+        <title>White-Raven ></title>
+        
+        <link rel="stylesheet" href="styles/main.css" />
+    </head>
+    <body>
+        <div class="header">
+            <div class="navbar">
+                <div class="logo">White RAVEN ></div>
+                <ul class="links">
+                    <li><a href="#about">ABOUT</a></li>
+                    <li><a href="#videos">INSTALLING</a></li>
+                    <li><a href="admin.html">ADMIN</a></li>
+                </ul>
+
+                <div class="toggle_btn">
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                </div>
+            </div>
+            <div class="dropdown-menu">
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#videos">INSTALLING</a></li>
+                <li><a href="admin.html">ADMIN</a></li>
+            </div>
+            <script>
+                const toggleBtn = document.querySelector('.toggle_btn')
+                const dropDownMenu = document.querySelector('.dropdown-menu')
+
+                toggleBtn.onclick = function () {
+                    dropDownMenu.classList.toggle('open')
+                }
+            </script>
+        </div>
+
+        <div class="card-stack">
+            <div class="card" id="about">
+                <!-- About Me Card -->
+                <img src="images/who_we_are_bkg.jpeg" alt="who-we-are-background" />
+
+                <div class="card-content">
+                    <div class="profile-box">
+                        <div class="profile-value">
+                            <div class="profile-img">
+                                <img src="images/raven_logo.png" alt="profile-picture" />
+                            </div>
+                            <h2 class="profile-name">SOC / Pentesting Tool</h2>
+                            <div class="profile-desc">
+                                <p>
+                                    White Raven is a python CLI (command line interface) tool. It allows users to create tools or use them in the current session.
+                                </p>
+                            </div>
+                            <div class="profile-link">
+                                <a href="https://www.youtube.com/@__R4V3N__" target="_blank"><ion-icon name="logo-youtube"></ion-icon></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" id="videos">
+                <!-- Skills Card -->
+                <img src="images/videos_bkg.jpeg" alt="videos-background" />
+                <div class="card-content">
+                    <div class="videos-box">
+                        <div class="videos-value">
+                            <!-- Have a list of skills here -->
+                            <div class="videos-grid">
+                                <!-- Do a grid of skills (image with score /10)-->
+                                <div class="video-item">
+                                    <div class="video-title">
+                                        <img src="images/white-hat.png" alt="python logo">
+                                        <h3>All about White Hat Hacking</h3>
+                                    </div>
+                                    <p>
+                                        A video on what its means to be a white hat hacker. (Being used as an example until we post)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="message">
+                <h5>White-Raven ></h5>
+            </div>
+            <!--
+            <div class="sponsors">
+                <h5>Sponsors:</h5>
+                <h5>Looking for sponsors.</h5>
+            </div>
+            -->
+        </div>
+    </body>
+</html>
