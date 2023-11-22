@@ -64,5 +64,3 @@ After that I wanted to see about reading logs and using python and regex to find
 There are many limitations with my approach and functions as they are now. It would be nice to have decoy have potential to be moved to a different device with selected ip and port of said device that the user can upload and run. As well as the audit tool is limited to the keywords the user defines and has no way of triaging whats more important to display first over less important. An Nmap is able to show potential attacks that can be done while fortel makes the user search themselves.
 
 My goal is to address these limitations and find ways to better the program while also knowing in doing so more limitations are bound to show up.
-
-# Advantages
