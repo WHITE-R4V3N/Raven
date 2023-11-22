@@ -1,6 +1,9 @@
 import sys, string, os, re
 import socket
 import time
+import json
+
+import scapy.all as scapy
 
 from colorama import init, Fore
 from threading import Thread, Lock
@@ -29,31 +32,31 @@ class HELP_Prompt:
         'tools' : {
             'details' : f'''
             \r Create a tool or use a tool in the current session.
-            \r Tools: Ravens Map, Ravens Fortel, Ravens Decoy, Ravens Sense
+            \r Tools: Ravens Map, Ravens Fortel, Ravens Decoy, Ravens Audit
 
             \r Ravens Map:
             \r   Will map a network and all connected IP adresses.
             \r   Command Usage:
-            \r   tool map
+            \r   tool map <ip range>
 
             \r Ravens Fortel:
             \r   Takes an IP address and finds open ports and checks for vulnerabilities.
             \r   Command Usage:
-            \r   tool fortel <IP address> <number of threads> <highest port to scan>
-
-            \r Ravens Sense:
-            \r   Will monitor the network for ping sweeps and intrusions.
-            \r   Command Usage:
-            \r   tool sense
+            \r   tool fortel <IP address> <number of threads> <port range>
 
             \r Ravens Decoy:
-            \r   Will turn the session into a decoy or create a decoy script for a device.
-            \r   The script can then be installed and run on a device.
-            \r   It will ban any IP address that pings the device that the decoy is running on.
+            \r   Will turn the session into a decoy displaying an IP address scanning the
+            \r   selected port address. Opening the port and baiting in anyone doing a port
+            \r   scan on the device.
             \r   Command Usage:
-            \r   tool decoy
-            \r   or
-            \r   tool decoy download
+            \r   tool decoy <device ip> <port number>
+
+            \r Ravens Audit:
+            \r   Searches through chosen logs with selected key words to check for suspicious
+            \r   activity. Alternate quotes for keywords that have more than one word in it.
+            \r   ie. 'unauthorized access' or "failed login" 
+            \r   Command Usage:
+            \r   tool audit <path to log file> <keywords to check for>
             '''
         },
 
@@ -85,8 +88,6 @@ class HELP_Prompt:
         print(HELP_Prompt.commands[cmd]['details']) if cmd in HELP_Prompt.commands.keys() else print(f'\nCould not find detailed help for {cmd}.\n')
 
 class RAVEN_Fortel():
-    init()
-
     GREEN = Fore.GREEN
     YELLOW = Fore.YELLOW
     RESET = Fore.RESET
@@ -125,6 +126,7 @@ class RAVEN_Fortel():
     def run_scanner():
         RAVEN_Fortel.get_ports()
         thread_list = []
+        print()
 
         for t in range(1, int(RAVEN_Fortel.num_threads)):
             thread = Thread(target=RAVEN_Fortel.worker)
@@ -135,12 +137,89 @@ class RAVEN_Fortel():
         for thread in thread_list:
             thread.join()
 
-        print(f'{RAVEN_Fortel.banner_dict}')
+        print(f'{RAVEN_Fortel.banner_dict}\n')
 
     def print_changes():
         print(RAVEN_Fortel.target_ip)
         print(RAVEN_Fortel.num_threads)
         print(f'{RAVEN_Fortel.start_port}-{RAVEN_Fortel.end_port}')
 
+class RAVEN_Map():
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    RESET = Fore.RESET
+    GRAY = Fore.LIGHTBLACK_EX
 
+    def get_device_name(ip):
+        try:
+            hostname, _, _ = socket.gethostbyaddr(ip)
+            return hostname
+        except socket.herror:
+            return "N/A"
 
+    def scan(ip):
+        arp_request = scapy.ARP(pdst=ip)
+        
+        broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+        arp_request_broadcast = broadcast/arp_request
+
+        answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
+        
+        clients_list = []
+    
+        for element in answered_list:
+            client_dict = {"ip": element[1].psrc, "mac": element[1].hwsrc, 'name': RAVEN_Map.get_device_name(element[1].psrc)}
+            clients_list.append(client_dict)
+        
+        return clients_list
+
+    def print_result(results_list):
+        print("\nIP Address\t\tMAC Address\t\tDevice Name\n")
+        for client in results_list:
+            print(f'{RAVEN_Map.GREEN}{client["ip"]}{RAVEN_Map.RESET}\t\t{client["mac"]}\t{client["name"]}')
+
+class RAVEN_Audit():
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    RESET = Fore.RESET
+    GRAY = Fore.LIGHTBLACK_EX
+
+    def audit_logs(log_file_path, suspicious_patterns):
+        with open(log_file_path, 'r') as log_file:
+            log_content = log_file.read()
+
+            parsed_logs = [line for line in log_content.split('\n')]
+
+        for log_entry in parsed_logs:
+            for pattern in suspicious_patterns:
+                if pattern in str(log_entry):
+                    print(f'{RAVEN_Audit.YELLOW}[+] Suspicious Activity Found!:{RAVEN_Audit.RESET}\n\t{log_entry}')
+
+class RAVEN_Decoy():
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    RESET = Fore.RESET
+    GRAY = Fore.LIGHTBLACK_EX
+
+    def start_server(ip_address, port):
+        try:
+            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            server_socket.bind((ip_address, int(port)))
+
+            server_socket.listen(5)
+            print(f'\nPort {port} is now open on {ip_address}. Listening...\n')
+
+            while True:
+                client_socket, client_address = server_socket.accept()
+                print(f"{RAVEN_Decoy.YELLOW}[-] {client_address[0]}:{client_address[1]}{RAVEN_Decoy.RESET} connected to decoy!")
+
+                client_socket.close()
+
+        except KeyboardInterrupt:
+            print('\nServer is shutting down...')
+        except:
+            print(f'Something went wrong! Make sure you are using your device IP address!\n')
+        finally:
+            server_socket.close()
+            print("\tDecoy sever is now closed.\n")
