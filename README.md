@@ -1,4 +1,4 @@
-# White-Raven
+# Raven
 
 <!-- Project Logo will go here -->
 <!-- Project cool buttons such as languages etc. here -->
@@ -23,7 +23,7 @@
 -->
 
 # Purpose
-White-Raven is a ethical hacking tool designed to be used by ethical hackers and SOC analysts. Helps automate mapping a network, intrusion detection, vulnerability searches, and more.
+Raven is a ethical hacking tool designed to be used by ethical hackers and SOC analysts. Helps automate mapping a network, intrusion detection, vulnerability searches, and more.
 
 # Preview
 
@@ -48,7 +48,7 @@ python white-raven.py
 ```
 
 # Apporach
-White-Raven is written in python for its scripting and its ease of automation. In my approach I did a lot of research into what each command needed to do and how to achieve it.
+Raven is written in python for its scripting and its ease of automation. In my approach I did a lot of research into what each command needed to do and how to achieve it.
 
 One essential tool that I wanted to psuedo create was Nmap. I had to learn how to open sockets and try to connect to the ports. From there how could I optimize and make it faster using threads.
 
